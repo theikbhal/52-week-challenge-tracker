@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>52 Week Challenge</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 10px;
+      font-size: 14px;
+      background: #f9f9f9;
+    }
+    h2 {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .info {
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .week {
+      background: #fff;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    }
+    .week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    textarea, input[type="date"] {
+      width: 100%;
+      margin-top: 5px;
+      font-size: 13px;
+      padding: 4px;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 50px;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>52 Week Challenge Tracker</h2>
+  <div class="info">
+    <strong>What:</strong> One small meaningful challenge each week.<br/>
+    <strong>Why:</strong> Build habits, improve consistency, track growth.<br/>
+    <strong>Plan:</strong> Track 52 tasks weekly for a year.<br/>
+    <strong>How:</strong> Check off, enter the date you did it, and write notes.
+  </div>
+
+  <div id="challenge-list"></div>
+
+  <script>
+    const listContainer = document.getElementById("challenge-list");
+
+    function loadData() {
+      const data = JSON.parse(localStorage.getItem("weekChallengeData") || "{}");
+      for (let i = 1; i <= 52;
