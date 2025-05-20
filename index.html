@@ -3,22 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>52 Week Challenge</title>
+  <title>52 Week Challenge Tracker</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       padding: 10px;
       font-size: 14px;
-      background: #f9f9f9;
+      background: #f5f5f5;
+      color: #333;
+      max-width: 600px;
+      margin: auto;
     }
-    h2 {
+    h1 {
+      font-size: 20px;
       text-align: center;
-      font-size: 18px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .info {
       font-size: 13px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.1);
     }
     .week {
       background: #fff;
@@ -32,15 +39,32 @@
       justify-content: space-between;
       align-items: center;
     }
-    textarea, input[type="date"] {
+    .week label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 10px;
+    }
+    input[type="date"], textarea {
       width: 100%;
+      box-sizing: border-box;
       margin-top: 5px;
       font-size: 13px;
-      padding: 4px;
-      box-sizing: border-box;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
     textarea {
       height: 50px;
+      resize: vertical;
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 20px;
+      color: #888;
     }
     @media (max-width: 600px) {
       body {
@@ -51,19 +75,57 @@
 </head>
 <body>
 
-  <h2>52 Week Challenge Tracker</h2>
+  <h1>📅 52 Week Challenge Tracker</h1>
+
   <div class="info">
-    <strong>What:</strong> One small meaningful challenge each week.<br/>
-    <strong>Why:</strong> Build habits, improve consistency, track growth.<br/>
-    <strong>Plan:</strong> Track 52 tasks weekly for a year.<br/>
-    <strong>How:</strong> Check off, enter the date you did it, and write notes.
+    <strong>What:</strong> Track 1 task each week for 52 weeks.<br>
+    <strong>Why:</strong> Build consistency, habits, or spiritual growth.<br>
+    <strong>Plan:</strong> One simple task per week, tracked here.<br>
+    <strong>How:</strong> Mark complete ✅, add date 📅, write notes 📝.<br>
+    <strong>Data:</strong> Saved locally in your browser (no login needed).
   </div>
 
   <div id="challenge-list"></div>
 
-  <script>
-    const listContainer = document.getElementById("challenge-list");
+  <footer>
+    Built by @theikbhal • Data saved in localStorage
+  </footer>
 
-    function loadData() {
-      const data = JSON.parse(localStorage.getItem("weekChallengeData") || "{}");
-      for (let i = 1; i <= 52;
+  <script>
+    const container = document.getElementById("challenge-list");
+    const storageKey = "weekChallengeData";
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+
+    for (let i = 1; i <= 52; i++) {
+      const weekKey = `week-${i}`;
+      const weekData = saved[weekKey] || { done: false, date: '', note: '' };
+
+      const div = document.createElement("div");
+      div.className = "week";
+      div.innerHTML = `
+        <div class="week-header">
+          <label>
+            <input type="checkbox" ${weekData.done ? 'checked' : ''} onchange="updateData(${i})" id="done-${i}">
+            Week ${i}
+          </label>
+        </div>
+        <div>
+          <input type="date" id="date-${i}" value="${weekData.date}" onchange="updateData(${i})" />
+          <textarea placeholder="Notes..." id="note-${i}" onchange="updateData(${i})">${weekData.note}</textarea>
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
+    window.updateData = function(i) {
+      const data = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      data[`week-${i}`] = {
+        done: document.getElementById(`done-${i}`).checked,
+        date: document.getElementById(`date-${i}`).value,
+        note: document.getElementById(`note-${i}`).value
+      };
+      localStorage.setItem(storageKey, JSON.stringify(data));
+    };
+  </script>
+</body>
+</html>
