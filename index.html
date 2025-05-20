@@ -35,17 +35,12 @@
       box-shadow: 0 0 4px rgba(0,0,0,0.1);
     }
     .week-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .week label {
       font-weight: bold;
-      margin-right: 10px;
+      margin-bottom: 6px;
     }
     input[type="checkbox"] {
       transform: scale(1.2);
-      margin-right: 10px;
+      margin-right: 8px;
     }
     input[type="date"], textarea {
       width: 100%;
@@ -65,11 +60,6 @@
       font-size: 12px;
       margin-top: 20px;
       color: #888;
-    }
-    @media (max-width: 600px) {
-      body {
-        font-size: 13px;
-      }
     }
   </style>
 </head>
@@ -96,18 +86,32 @@
     const storageKey = "weekChallengeData";
     const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
 
+    const currentYear = new Date().getFullYear();
+
+    function getWeekRange(weekNumber) {
+      const firstDayOfYear = new Date(currentYear, 0, 1);
+      const daysOffset = (weekNumber - 1) * 7;
+      const startDate = new Date(firstDayOfYear.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+      const endDate = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+      const options = { month: 'short', day: 'numeric' };
+      const start = startDate.toLocaleDateString(undefined, options);
+      const end = endDate.toLocaleDateString(undefined, options);
+
+      return `${start} – ${end}`;
+    }
+
     for (let i = 1; i <= 52; i++) {
       const weekKey = `week-${i}`;
       const weekData = saved[weekKey] || { done: false, date: '', note: '' };
+      const dateRange = getWeekRange(i);
 
       const div = document.createElement("div");
       div.className = "week";
       div.innerHTML = `
         <div class="week-header">
-          <label>
-            <input type="checkbox" ${weekData.done ? 'checked' : ''} onchange="updateData(${i})" id="done-${i}">
-            Week ${i}
-          </label>
+          <input type="checkbox" ${weekData.done ? 'checked' : ''} onchange="updateData(${i})" id="done-${i}">
+          Week ${i} (${dateRange})
         </div>
         <div>
           <input type="date" id="date-${i}" value="${weekData.date}" onchange="updateData(${i})" />
